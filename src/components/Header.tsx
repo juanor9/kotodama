@@ -4,10 +4,9 @@ import CurrencyDisplay from './UiComponents/CurrencyDisplay/CurrencyDisplay';
 interface HeaderProps {
   coins: number;
   essence: number;
-  onNavigate: (screen: 'main' | 'summon' | 'characters' | 'battle') => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ coins, essence, onNavigate }) => {
+const Header: React.FC<HeaderProps> = ({ coins, essence }) => {
   return (
     <header className="header">
       <CurrencyDisplay coins={coins} essence={essence}/>
