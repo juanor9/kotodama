@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Header from './components/Header';
 import SummoningArea from './components/SummoningArea';
 import CharacterList from './components/CharacterList';
@@ -44,14 +44,16 @@ function App() {
       case 'characters':
         return (
           <CharacterList 
-            characters={gameState.characters}
-          />
+            characters={gameState.characters} magicItems={{}} onUpgradeCharacter={function (character: Character): void {
+              throw new Error('Function not implemented.');
+            } }          />
         );
       case 'battle':
         return (
           <BattleArea 
-            playerCharacters={gameState.characters}
-          />
+            playerCharacters={gameState.characters} onBattleComplete={function (rewards: { coins: number; essence: number; experience: number[]; }): void {
+              throw new Error('Function not implemented.');
+            } }          />
         );
       default:
         return (
