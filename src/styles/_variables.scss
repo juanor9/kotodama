@@ -5,7 +5,9 @@ $accent-color: #e74c3c;
 $background-color: #f0f0f0;
 $text-color: #333333;
 $menu-dark-color: #264d54;
-
+$menu-light-color: #7bd7c4;
+// gradient from black to white top to bottom
+$button-gradient: linear-gradient(180deg, #b8f4db, #6acfc8);
 // Typography
 $font-family-main: 'Noto Sans JP', sans-serif;
 $font-family-heading: 'Noto Serif JP', serif;

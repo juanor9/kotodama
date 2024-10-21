@@ -128,9 +128,15 @@ body {
   &-container{
     margin: 0;
     background: url('../assets/bg/bg.webp') center top no-repeat;
-    padding: 1em;
+    padding: 0;
     background-color: black;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 }
-
+.footer{
+  justify-self: end;
+}
 /* Add any additional styles as needed */

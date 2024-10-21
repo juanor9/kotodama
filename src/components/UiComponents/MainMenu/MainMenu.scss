@@ -1,0 +1,32 @@
+@use 'sass:color';
+@use '../../../styles/variables';
+@use '../../../styles/mixins';
+@use '../../../styles/animations';
+
+.main-menu{
+  
+  background-color: variables.$menu-dark-color;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  justify-content: space-around;
+  padding: .7em;
+  &__button{
+    font-size: 0.7em;
+    aspect-ratio: 1/1;
+    background: variables.$button-gradient;
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.3em;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    width: 7em;
+    align-items: center;
+
+    &-label{
+      padding: 0.3em;
+    }
+  }
+}

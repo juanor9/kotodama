@@ -1,9 +1,13 @@
 import React from 'react';
+import MainMenu from '../components/UiComponents/MainMenu/MainMenu';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate: (screen: 'main' | 'summon' | 'characters' | 'battle') => void;
+}
+const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="footer">
-      <p>&copy; 2024 Kotodama Chronicles. Todos los derechos reservados.</p>
+      <MainMenu onNavigate={onNavigate} />
     </footer>
   );
 };
