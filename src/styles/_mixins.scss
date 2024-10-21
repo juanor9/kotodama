@@ -1,0 +1,43 @@
+@use 'sass:color';
+@use 'variables';
+
+@mixin card-style {
+  background-color: white;
+  border-radius: variables.$border-radius;
+  box-shadow: variables.$box-shadow;
+}
+
+@mixin button-style {
+  padding: 10px 15px;
+  border: none;
+  border-radius: variables.$border-radius;
+  background-color: variables.$primary-color;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: color.scale(variables.$primary-color, $lightness: -10%);
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == small {
+    @media (min-width: variables.$breakpoint-small) {
+      @content;
+    }
+  } @else if $breakpoint == medium {
+    @media (min-width: variables.$breakpoint-medium) {
+      @content;
+    }
+  } @else if $breakpoint == large {
+    @media (min-width: variables.$breakpoint-large) {
+      @content;
+    }
+  } @else if $breakpoint == xlarge {
+    @media (min-width: variables.$breakpoint-xlarge) {
+      @content;
+    }
+  }
+}
