@@ -1,5 +1,4 @@
 import React from 'react';
-import { Coins, Droplet } from 'lucide-react';
 import './CurrencyDisplay.scss';
 interface CurrencyProps {
   coins: number;
