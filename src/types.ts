@@ -33,7 +33,7 @@ export interface GameState {
   coins: number;
   essence: number;
   characters: Character[];
-  currentScreen: 'main' | 'summon' | 'characters' | 'battle';
+  currentScreen: 'main' | 'summon' | 'characters' | 'battle' | 'profile';
 }
 
 export interface SummonResult {
