@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { SummonResult, Character } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getMaterialsForRarityIncrease } from '../utils/summonLogic';
 
 interface SummoningCircleProps {
   count: number;
   results: SummonResult[];
   onComplete: () => void;
   onClose: () => void;
-  getMaterialsForRarityIncrease: (character: Character) => { material_id: string; quantity: number }[] | null;
 }
 
-const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onComplete, onClose, getMaterialsForRarityIncrease }) => {
+const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onComplete, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -72,6 +72,14 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
             style={{ backgroundColor: getColorByRarity(results[currentIndex].character.rarity) }}
           >
             <div className="summoning-text">Summoning... {currentIndex + 1}/{count}</div>
+            <motion.img
+              src={results[currentIndex].character.artUrl}
+              alt={results[currentIndex].character.name}
+              className="spirit-image"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            />
             <div className="spirit-name">{results[currentIndex].character.name}</div>
             <div className="spirit-rarity">{'★'.repeat(results[currentIndex].character.rarity)}</div>
             {results[currentIndex].isNew && <div className="new-spirit">New!</div>}
@@ -89,8 +97,11 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
             <div className="summoned-spirits">
               {results.map((result, index) => (
                 <div key={index} className="spirit-summary" style={{ color: getColorByRarity(result.character.rarity) }}>
-                  {result.character.name} - {'★'.repeat(result.character.rarity)}
-                  {result.isNew && <span className="new-tag">New!</span>}
+                  <img src={result.character.artUrl} alt={result.character.name} className="spirit-thumbnail" />
+                  <div>
+                    {result.character.name} - {'★'.repeat(result.character.rarity)}
+                    {result.isNew && <span className="new-tag">New!</span>}
+                  </div>
                   {renderMaterials(result.character)}
                 </div>
               ))}

@@ -3,7 +3,7 @@ import { Coins, Droplet } from 'lucide-react';
 import SummoningCircle from './SummoningCircle';
 import Modal from './Modal';
 import { Character, SummonResult } from '../types';
-import { summonSpirit, summonMultipleSpirits, getMaterialsForRarityIncrease } from '../utils/summonLogic';
+import { summonSpirit, summonMultipleSpirits } from '../utils/summonLogic';
 
 interface SummoningAreaProps {
   addCharacters: (characters: Character[]) => void;
@@ -43,7 +43,6 @@ const SummoningArea: React.FC<SummoningAreaProps> = ({
 
       const results =
         count === 1 ? [summonSpirit(playerInventory)] : summonMultipleSpirits(count, playerInventory);
-      console.log(results);
       setSummonResults(results);
     } else {
       setModalMessage(`Not enough ${currency} for summoning!`);
@@ -86,7 +85,6 @@ const SummoningArea: React.FC<SummoningAreaProps> = ({
           results={summonResults}
           onComplete={onSummonComplete}
           onClose={() => setShowSummoning(false)}
-          getMaterialsForRarityIncrease={getMaterialsForRarityIncrease}
         />
       )}
       <Modal
