@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { registerUser } from '../services/userService';
+import React, { useState } from "react";
+import { registerUser } from "../services/userService.ts";
 
-const Register: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
+function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await registerUser(email, password, username);
-    } catch (error) {
-      setError('Failed to register');
+    } catch {
+      setError("Failed to register");
     }
   };
 
@@ -46,6 +46,6 @@ const Register: React.FC = () => {
       {error && <p className="error">{error}</p>}
     </div>
   );
-};
+}
 
 export default Register;

@@ -26,6 +26,7 @@ function SummoningCircle({
       };
     }
     onComplete();
+    return undefined;
   }, [currentIndex, count, onComplete]);
 
   const getColorByRarity = (rarity: number) => {
@@ -57,7 +58,6 @@ function SummoningCircle({
         <ul>
           {materials.map((material) => (
             <li key={`${character.id}-${material.material_id}`}>
-              {" "}
               {material.material_id}: {material.quantity}
             </li>
           ))}
@@ -97,7 +97,7 @@ function SummoningCircle({
             className="circle"
             style={{
               backgroundColor: getColorByRarity(
-                results[currentIndex].character.rarity,
+                (results[currentIndex].character as Character).rarity,
               ),
             }}
           >
@@ -105,7 +105,7 @@ function SummoningCircle({
               Summoning... {currentIndex + 1}/{count}
             </div>
             <motion.img
-              src={results[currentIndex].character.artUrl}
+              src={(results[currentIndex].character as Character).image}
               alt={results[currentIndex].character.name}
               className="spirit-image"
               initial={{ opacity: 0 }}
@@ -121,7 +121,7 @@ function SummoningCircle({
             {results[currentIndex].isNew && (
               <div className="new-spirit">New!</div>
             )}
-            {renderMaterials(results[currentIndex].character)}
+            {renderMaterials(results[currentIndex].character as Character)}
           </motion.div>
         ) : (
           <motion.div
@@ -137,10 +137,14 @@ function SummoningCircle({
                 <div
                   key={result.character.id}
                   className="spirit-summary"
-                  style={{ color: getColorByRarity(result.character.rarity) }}
+                  style={{
+                    color: getColorByRarity(
+                      (result.character as Character).rarity,
+                    ),
+                  }}
                 >
                   <img
-                    src={result.character.artUrl}
+                    src={(result.character as Character).image}
                     alt={result.character.name}
                     className="spirit-thumbnail"
                   />
@@ -149,7 +153,7 @@ function SummoningCircle({
                     {"★".repeat(result.character.rarity)}
                     {result.isNew && <span className="new-tag">New!</span>}
                   </div>
-                  {renderMaterials(result.character)}
+                  {renderMaterials(result.character as Character)}
                 </div>
               ))}
             </div>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import CharacterCard from './CharacterCard';
-import { Character } from '../types';
+import { useState } from "react";
+import CharacterCard from "./CharacterCard.tsx";
+import { Character } from "../types.ts";
 
 interface CharacterListProps {
   characters: Character[];
@@ -8,30 +8,47 @@ interface CharacterListProps {
   onUpgradeCharacter: (character: Character) => void;
 }
 
-const CharacterList: React.FC<CharacterListProps> = ({ characters, magicItems, onUpgradeCharacter }) => {
-  const [filter, setFilter] = useState<'all' | 'Component' | 'Kanji' | 'Word'>('all');
+function CharacterList({
+  characters,
+  magicItems,
+  onUpgradeCharacter,
+}: CharacterListProps) {
+  const [filter, setFilter] = useState<"all" | "Component" | "Kanji" | "Word">(
+    "all",
+  );
 
-  const filteredCharacters = characters.filter(char => 
-    filter === 'all' || char.type === filter
+  const filteredCharacters = characters.filter(
+    (char) => filter === "all" || char.type === filter,
   );
 
   return (
     <div className="character-list">
       <h2>Your Spirits</h2>
       <div className="filter-buttons">
-        <button onClick={() => setFilter('all')}>All</button>
-        <button onClick={() => setFilter('Component')}>Components</button>
-        <button onClick={() => setFilter('Kanji')}>Kanji</button>
-        <button onClick={() => setFilter('Word')}>Words</button>
+        <button type="button" onClick={() => setFilter("all")}>
+          All
+        </button>
+        <button type="button" onClick={() => setFilter("Component")}>
+          Components
+        </button>
+        <button type="button" onClick={() => setFilter("Kanji")}>
+          Kanji
+        </button>
+        <button type="button" onClick={() => setFilter("Word")}>
+          Words
+        </button>
       </div>
       {filteredCharacters.length === 0 ? (
-        <p>You haven't summoned any spirits of this type yet. Start summoning to build your collection!</p>
+        <p>
+          You haven&apos;t summoned any spirits of this type yet. Start
+          summoning to build your collection!
+        </p>
       ) : (
         <div className="character-grid">
           {filteredCharacters.map((character) => (
-            <CharacterCard 
-              key={character.id} 
-              character={character} 
+            <CharacterCard
+              key={character.id}
+              character={character}
               magicItems={magicItems}
               onUpgrade={() => onUpgradeCharacter(character)}
             />
@@ -40,6 +57,6 @@ const CharacterList: React.FC<CharacterListProps> = ({ characters, magicItems, o
       )}
     </div>
   );
-};
+}
 
 export default CharacterList;

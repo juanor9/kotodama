@@ -1,25 +1,30 @@
-import React from 'react';
-import { User } from 'firebase/auth';
-import CurrencyDisplay from './UiComponents/CurrencyDisplay/CurrencyDisplay';
+import { User } from "firebase/auth";
+import CurrencyDisplay from "./UiComponents/CurrencyDisplay/CurrencyDisplay.tsx";
 
 interface HeaderProps {
   coins: number;
   essence: number;
-  onNavigate: (screen: 'main' | 'summon' | 'characters' | 'battle' | 'profile') => void;
+  onNavigate: (
+    screen: "main" | "summon" | "characters" | "battle" | "profile",
+  ) => void;
   user: User | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ coins, essence, onNavigate, user }) => {
+function Header({ coins, essence, onNavigate, user }: HeaderProps) {
   return (
     <header className="header">
-      <CurrencyDisplay coins={coins} essence={essence}/>
+      <CurrencyDisplay coins={coins} essence={essence} />
       {user && (
-        <button className="profile-btn" onClick={() => onNavigate('profile')}>
+        <button
+          type="button"
+          className="profile-btn"
+          onClick={() => onNavigate("profile")}
+        >
           Profile
         </button>
       )}
     </header>
   );
-};
+}
 
 export default Header;
