@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Coins, Droplet } from 'lucide-react';
-import SummoningCircle from './SummoningCircle';
-import Modal from './Modal';
-import { Character, SummonResult } from '../types';
-import { summonSpirit, summonMultipleSpirits } from '../utils/summonLogic';
+import React, { useState } from "react";
+import { Coins: React.FC<{ size: number }>, Droplet: React.FC<{ size: number }> } from "lucide-react";
+import SummoningCircle from "./SummoningCircle";
+import Modal from "./Modal";
+import { Character, SummonResult } from "../types";
+import { summonSpirit, summonMultipleSpirits } from "../utils/summonLogic";
 
 interface SummoningAreaProps {
   addCharacters: (characters: Character[]) => void;
@@ -13,36 +13,38 @@ interface SummoningAreaProps {
   playerInventory: Character[];
 }
 
-const SummoningArea: React.FC<SummoningAreaProps> = ({
-  addCharacters,
+function SummoningArea({
+  addCharacters: (characters: Character[]) => void,
   updateCurrency,
   coins,
   essence,
   playerInventory,
-}) => {
+}) {
   const [showSummoning, setShowSummoning] = useState(false);
   const [summonCount, setSummonCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  const [modalMessage, setModalMessage] = useState("");
   const [summonResults, setSummonResults] = useState<SummonResult[]>([]);
 
   const handleSummon = (count: number, useEssence: boolean) => {
     const cost = count === 1 ? (useEssence ? 1 : 100) : 50;
-    const currency = useEssence ? 'essence' : 'coins';
+    const currency = useEssence ? "essence" : "coins";
 
     if (
-      (currency === 'coins' && coins >= cost) ||
-      (currency === 'essence' && essence >= cost)
+      (currency === "coins" && coins >= cost) ||
+      (currency === "essence" && essence >= cost)
     ) {
       setShowSummoning(true);
       setSummonCount(count);
       updateCurrency(
-        currency === 'coins' ? cost : 0,
-        currency === 'essence' ? cost : 0
+        currency === "coins" ? cost : 0,
+        currency === "essence" ? cost : 0,
       );
 
       const results =
-        count === 1 ? [summonSpirit(playerInventory)] : summonMultipleSpirits(count, playerInventory);
+        count === 1
+          ? [summonSpirit(playerInventory)]
+          : summonMultipleSpirits(count, playerInventory);
       setSummonResults(results);
     } else {
       setModalMessage(`Not enough ${currency} for summoning!`);

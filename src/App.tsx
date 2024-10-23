@@ -1,16 +1,21 @@
-import { useState, useEffect } from 'react';
-import { auth } from './services/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import Header from './components/Header';
-import SummoningArea from './components/SummoningArea';
-import CharacterList from './components/CharacterList';
-import BattleArea from './components/BattleArea';
-import Footer from './components/Footer';
-import UserProfile from './components/UserProfile';
-import Login from './components/Login';
-import Register from './components/Register';
-import { Character, GameState } from './types';
-import { getUserData, updateUserData, addCharacterToInventory, updateCurrency } from './services/userService';
+import { useState, useEffect } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "./services/firebase.ts";
+import Header from "./components/Header.tsx";
+import SummoningArea from "./components/SummoningArea.tsx";
+import CharacterList from "./components/CharacterList.tsx";
+import BattleArea from "./components/BattleArea.tsx";
+import Footer from "./components/Footer.tsx";
+import UserProfile from "./components/UserProfile.tsx";
+import Login from "./components/Login.tsx";
+import Register from "./components/Register.tsx";
+import { Character, GameState } from "./types.ts";
+import {
+  getUserData,
+  updateUserData,
+  addCharacterToInventory,
+  updateCurrency,
+} from "./services/userService.ts";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -18,14 +23,14 @@ function App() {
     coins: 1000,
     essence: 50,
     characters: [],
-    currentScreen: 'main',
+    currentScreen: "main",
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        const userData = await getUserData(user.uid);
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      setUser(authUser);
+      if (authUser) {
+        const userData = await getUserData(authUser.uid);
         setGameState(userData);
       }
     });
@@ -36,22 +41,29 @@ function App() {
   const addCharacters = async (newCharacters: Character[]) => {
     if (user) {
       const updatedCharacters = [...gameState.characters, ...newCharacters];
-      setGameState(prevState => ({
+      setGameState((prevState) => ({
         ...prevState,
         characters: updatedCharacters,
       }));
       await updateUserData(user.uid, { characters: updatedCharacters });
-      for (const character of newCharacters) {
-        await addCharacterToInventory(user.uid, character);
-      }
+
+      // Use Promise.all to handle multiple async operations in parallel
+      await Promise.all(
+        newCharacters.map((character) =>
+          addCharacterToInventory(user.uid, character),
+        ),
+      );
     }
   };
 
-  const updateCurrencyState = async (coinsSpent: number, essenceSpent: number) => {
+  const updateCurrencyState = async (
+    coinsSpent: number,
+    essenceSpent: number,
+  ) => {
     if (user) {
       const newCoins = gameState.coins - coinsSpent;
       const newEssence = gameState.essence - essenceSpent;
-      setGameState(prevState => ({
+      setGameState((prevState) => ({
         ...prevState,
         coins: newCoins,
         essence: newEssence,
@@ -62,36 +74,40 @@ function App() {
 
   const renderCurrentScreen = () => {
     switch (gameState.currentScreen) {
-      case 'summon':
+      case "summon":
         return (
-          <SummoningArea 
-            addCharacters={addCharacters} 
+          <SummoningArea
+            addCharacters={addCharacters}
             updateCurrency={updateCurrencyState}
             coins={gameState.coins}
             essence={gameState.essence}
             playerInventory={gameState.characters}
           />
         );
-      case 'characters':
+      case "characters":
         return (
-          <CharacterList 
+          <CharacterList
             characters={gameState.characters}
             magicItems={{}}
             onUpgradeCharacter={(character: Character) => {
-              console.log('Upgrading character:', character);
+              console.log("Upgrading character:", character);
             }}
           />
         );
-      case 'battle':
+      case "battle":
         return (
-          <BattleArea 
+          <BattleArea
             playerCharacters={gameState.characters}
-            onBattleComplete={(rewards: { coins: number; essence: number; experience: number[] }) => {
-              console.log('Battle complete, rewards:', rewards);
+            onBattleComplete={(rewards: {
+              coins: number;
+              essence: number;
+              experience: number[];
+            }) => {
+              console.log("Battle complete, rewards:", rewards);
             }}
           />
         );
-      case 'profile':
+      case "profile":
         return <UserProfile user={user} gameState={gameState} />;
       default:
         return (
@@ -114,16 +130,20 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header 
-        coins={gameState.coins} 
+      <Header
+        coins={gameState.coins}
         essence={gameState.essence}
-        onNavigate={(screen) => setGameState(prev => ({ ...prev, currentScreen: screen }))}
+        onNavigate={(screen) =>
+          setGameState((prev) => ({ ...prev, currentScreen: screen }))
+        }
         user={user}
       />
-      <main>
-        {renderCurrentScreen()}
-      </main>
-      <Footer onNavigate={(screen) => setGameState(prev => ({ ...prev, currentScreen: screen }))} />
+      <main>{renderCurrentScreen()}</main>
+      <Footer
+        onNavigate={(screen) =>
+          setGameState((prev) => ({ ...prev, currentScreen: screen }))
+        }
+      />
     </div>
   );
 }

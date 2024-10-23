@@ -1,15 +1,19 @@
-import { LucideIcon } from 'lucide-react';
+/* eslint-disable no-use-before-define */
+import { LucideIcon } from "lucide-react";
 
-export type ElementType = 'Air' | 'Water' | 'Fire' | 'Earth' | 'Metal' | 'Wood' | 'Light' | 'Darkness' | 'Healing';
-export type SpiritType = 'Component' | 'Kanji' | 'Word';
+export type ElementType =
+  | "Air"
+  | "Water"
+  | "Fire"
+  | "Earth"
+  | "Metal"
+  | "Wood"
+  | "Light"
+  | "Darkness"
+  | "Healing";
+export type SpiritType = "Component" | "Kanji" | "Word";
 export type Rarity = 1 | 2 | 3 | 4 | 5 | 6;
-export type AttackType = 'Form' | 'Meaning' | 'Reading';
-
-export interface Ability {
-  name: string;
-  description: string;
-  effect: (target: Character) => void;
-}
+export type AttackType = "Form" | "Meaning" | "Reading";
 
 export interface Character {
   id: number;
@@ -29,11 +33,17 @@ export interface Character {
   maxRarity: number;
 }
 
+export interface Ability {
+  name: string;
+  description: string;
+  effect: (target: Character) => void; // Cambio para definir Character después
+}
+
 export interface GameState {
   coins: number;
   essence: number;
   characters: Character[];
-  currentScreen: 'main' | 'summon' | 'characters' | 'battle' | 'profile';
+  currentScreen: "main" | "summon" | "characters" | "battle" | "profile";
 }
 
 export interface SummonResult {
@@ -48,14 +58,14 @@ export interface CurrencyDisplay {
 }
 
 export interface DiscAction {
-  type: AttackType | 'Special' | 'Dopple';
+  type: AttackType | "Special" | "Dopple";
   character: Character;
 }
 
 export interface BattleState {
   playerTeam: Character[];
   enemyTeam: Character[];
-  currentTurn: 'player' | 'enemy';
+  currentTurn: "player" | "enemy";
   selectedDiscs: DiscAction[];
   magicPoints: number;
 }
