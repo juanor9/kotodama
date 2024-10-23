@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "./services/firebase.ts";
-import Header from "./components/Header.tsx";
-import SummoningArea from "./components/SummoningArea.tsx";
-import CharacterList from "./components/CharacterList.tsx";
-import BattleArea from "./components/BattleArea.tsx";
-import Footer from "./components/Footer.tsx";
-import UserProfile from "./components/UserProfile.tsx";
-import Login from "./components/Login.tsx";
-import Register from "./components/Register.tsx";
-import { Character, GameState } from "./types.ts";
+import { useState, useEffect } from "react";
 import {
   getUserData,
   updateUserData,
   addCharacterToInventory,
   updateCurrency,
 } from "./services/userService.ts";
+import { auth } from "./services/firebase.ts";
+import { Character, GameState } from "./types.ts";
+import BattleArea from "./components/BattleArea.tsx";
+import CharacterList from "./components/CharacterList.tsx";
+import Footer from "./components/Footer.tsx";
+import Header from "./components/Header.tsx";
+import SummoningArea from "./components/SummoningArea.tsx";
+import UserProfile from "./components/UserProfile.tsx";
+import Auth from "./components/Screens/Auth.tsx";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -141,10 +140,7 @@ function App() {
   return (
     <BrowserRouter>
       {!user ? (
-        <div className="auth-container">
-          <Login />
-          <Register />
-        </div>
+        <Auth />
       ) : (
         <div className="app-container">
           <Header

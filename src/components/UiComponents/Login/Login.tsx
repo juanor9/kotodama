@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, resetPassword } from "../services/userService.ts";
+import { loginUser, resetPassword } from "../../../services/userService.ts";
+import "./Login.scss";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -51,10 +52,11 @@ function Login() {
   };
 
   return (
-    <div className="login-form">
+    <div className="login__container">
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin} className="login__form">
         <input
+          className="login__form-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -63,6 +65,7 @@ function Login() {
           autoComplete="email"
         />
         <input
+          className="login__form-input"
           type="password"
           placeholder="Password"
           value={password}
