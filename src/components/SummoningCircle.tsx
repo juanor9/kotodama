@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { SummonResult, Character } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getMaterialsForRarityIncrease } from '../utils/summonLogic';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { SummonResult, Character } from "../types.ts";
+import { getMaterialsForRarityIncrease } from "../utils/summonLogic.ts";
 
 interface SummoningCircleProps {
   count: number;
@@ -10,27 +10,40 @@ interface SummoningCircleProps {
   onClose: () => void;
 }
 
-const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onComplete, onClose }) => {
+function SummoningCircle({
+  count,
+  results,
+  onComplete,
+  onClose,
+}: SummoningCircleProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (currentIndex < count) {
-      const timer = setTimeout(() => setCurrentIndex(prev => prev + 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      onComplete();
+      const timer = setTimeout(() => setCurrentIndex((prev) => prev + 1), 1000);
+      return () => {
+        clearTimeout(timer);
+      };
     }
+    onComplete();
   }, [currentIndex, count, onComplete]);
 
   const getColorByRarity = (rarity: number) => {
     switch (rarity) {
-      case 1: return '#b0bec5';
-      case 2: return '#8bc34a';
-      case 3: return '#03a9f4';
-      case 4: return '#9c27b0';
-      case 5: return '#ffc107';
-      case 6: return '#e91e63';
-      default: return '#ffffff';
+      case 1:
+        return "#b0bec5";
+      case 2:
+        return "#8bc34a";
+      case 3:
+        return "#03a9f4";
+      case 4:
+        return "#9c27b0";
+      case 5:
+        return "#ffc107";
+      case 6:
+        return "#e91e63";
+      default:
+        return "#ffffff";
     }
   };
 
@@ -42,8 +55,11 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
       <div className="rarity-increase-materials">
         <h4>Materials for Rarity Increase:</h4>
         <ul>
-          {materials.map((material, index) => (
-            <li key={index}>{material.material_id}: {material.quantity}</li>
+          {materials.map((material) => (
+            <li key={`${character.id}-${material.material_id}`}>
+              {" "}
+              {material.material_id}: {material.quantity}
+            </li>
           ))}
         </ul>
       </div>
@@ -53,13 +69,23 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
   if (results.length === 0) {
     return (
       <div className="summoning-circle">
-        <div className="summoning-error">No spirits summoned. Please try again.</div>
+        <div className="summoning-error" role="alert">
+          No spirits summoned. Please try again.
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="summoning-circle" onClick={onClose}>
+    <div
+      className="summoning-circle"
+      onClick={onClose}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClose();
+      }}
+    >
       <AnimatePresence>
         {currentIndex < count ? (
           <motion.div
@@ -69,9 +95,15 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
             exit={{ scale: 0, rotate: 180 }}
             transition={{ duration: 0.5 }}
             className="circle"
-            style={{ backgroundColor: getColorByRarity(results[currentIndex].character.rarity) }}
+            style={{
+              backgroundColor: getColorByRarity(
+                results[currentIndex].character.rarity,
+              ),
+            }}
           >
-            <div className="summoning-text">Summoning... {currentIndex + 1}/{count}</div>
+            <div className="summoning-text">
+              Summoning... {currentIndex + 1}/{count}
+            </div>
             <motion.img
               src={results[currentIndex].character.artUrl}
               alt={results[currentIndex].character.name}
@@ -80,9 +112,15 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             />
-            <div className="spirit-name">{results[currentIndex].character.name}</div>
-            <div className="spirit-rarity">{'★'.repeat(results[currentIndex].character.rarity)}</div>
-            {results[currentIndex].isNew && <div className="new-spirit">New!</div>}
+            <div className="spirit-name">
+              {results[currentIndex].character.name}
+            </div>
+            <div className="spirit-rarity">
+              {"★".repeat(results[currentIndex].character.rarity)}
+            </div>
+            {results[currentIndex].isNew && (
+              <div className="new-spirit">New!</div>
+            )}
             {renderMaterials(results[currentIndex].character)}
           </motion.div>
         ) : (
@@ -95,11 +133,20 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
           >
             <h3>Summoning Complete!</h3>
             <div className="summoned-spirits">
-              {results.map((result, index) => (
-                <div key={index} className="spirit-summary" style={{ color: getColorByRarity(result.character.rarity) }}>
-                  <img src={result.character.artUrl} alt={result.character.name} className="spirit-thumbnail" />
+              {results.map((result) => (
+                <div
+                  key={result.character.id}
+                  className="spirit-summary"
+                  style={{ color: getColorByRarity(result.character.rarity) }}
+                >
+                  <img
+                    src={result.character.artUrl}
+                    alt={result.character.name}
+                    className="spirit-thumbnail"
+                  />
                   <div>
-                    {result.character.name} - {'★'.repeat(result.character.rarity)}
+                    {result.character.name} -{" "}
+                    {"★".repeat(result.character.rarity)}
                     {result.isNew && <span className="new-tag">New!</span>}
                   </div>
                   {renderMaterials(result.character)}
@@ -111,6 +158,6 @@ const SummoningCircle: React.FC<SummoningCircleProps> = ({ count, results, onCom
       </AnimatePresence>
     </div>
   );
-};
+}
 
 export default SummoningCircle;

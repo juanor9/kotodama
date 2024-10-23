@@ -1,0 +1,49 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",  // Aplica las reglas de Prettier y muestra errores si no están alineadas
+    "react/react-in-jsx-scope": "off", // Desactivada porque ya no es necesaria en React 17+
+    "no-console": "warn", // Muestra advertencias para console.log, pero no bloquea el código
+    "react/prop-types": "off", // Desactivada ya que usas TypeScript para la validación de props
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }], // Evitar errores por variables sin usar, ignorando las que empiezan con "_"
+    "import/prefer-default-export": "off", // Permite usar exports no predeterminados sin advertencia
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",  // Ignora extensiones en archivos TypeScript
+        "tsx": "never",
+        "js": "always",  // Requiere extensiones en archivos JavaScript
+        "jsx": "always"
+      }
+    ],
+    "react/jsx-filename-extension": [
+      "error",
+      { "extensions": [".jsx", ".tsx"] }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect" // Detecta automáticamente la versión de React
+    }
+  }
+}
