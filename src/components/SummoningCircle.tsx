@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SummonResult, Character } from "../types.ts";
-import { getMaterialsForRarityIncrease } from "../utils/summonLogic.ts";
 
 interface SummoningCircleProps {
   count: number;
@@ -46,24 +45,6 @@ function SummoningCircle({
       default:
         return "#ffffff";
     }
-  };
-
-  const renderMaterials = (character: Character) => {
-    const materials = getMaterialsForRarityIncrease(character);
-    if (!materials) return null;
-
-    return (
-      <div className="rarity-increase-materials">
-        <h4>Materials for Rarity Increase:</h4>
-        <ul>
-          {materials.map((material) => (
-            <li key={`${character.id}-${material.material_id}`}>
-              {material.material_id}: {material.quantity}
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
   };
 
   if (results.length === 0) {
@@ -121,7 +102,6 @@ function SummoningCircle({
             {results[currentIndex].isNew && (
               <div className="new-spirit">New!</div>
             )}
-            {renderMaterials(results[currentIndex].character as Character)}
           </motion.div>
         ) : (
           <motion.div
@@ -153,7 +133,6 @@ function SummoningCircle({
                     {"★".repeat(result.character.rarity)}
                     {result.isNew && <span className="new-tag">New!</span>}
                   </div>
-                  {renderMaterials(result.character as Character)}
                 </div>
               ))}
             </div>
