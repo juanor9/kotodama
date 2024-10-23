@@ -11,11 +11,11 @@ import { auth } from "./services/firebase.ts";
 import { Character, GameState } from "./types.ts";
 import BattleArea from "./components/BattleArea.tsx";
 import CharacterList from "./components/CharacterList.tsx";
-import Footer from "./components/Footer.tsx";
 import Header from "./components/Header.tsx";
 import SummoningArea from "./components/SummoningArea.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import Auth from "./components/Screens/Auth.tsx";
+import MainMenu from "./components/UiComponents/MainMenu/MainMenu.tsx";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -33,6 +33,8 @@ function App() {
         } catch (error) {
           console.error("Failed to get user data", error);
         }
+      } else {
+        setGameState(null);
       }
     });
 
@@ -151,10 +153,9 @@ function App() {
                 prev ? { ...prev, currentScreen: screen } : null,
               )
             }
-            user={user}
           />
           <main>{renderCurrentScreen()}</main>
-          <Footer
+          <MainMenu
             onNavigate={(screen) =>
               setGameState((prev) =>
                 prev ? { ...prev, currentScreen: screen } : null,
