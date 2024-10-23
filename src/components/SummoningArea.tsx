@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Coins: React.FC<{ size: number }>, Droplet: React.FC<{ size: number }> } from "lucide-react";
-import SummoningCircle from "./SummoningCircle";
-import Modal from "./Modal";
-import { Character, SummonResult } from "../types";
-import { summonSpirit, summonMultipleSpirits } from "../utils/summonLogic";
+import { useState } from "react";
+import { Coins, Droplet } from "lucide-react";
+import SummoningCircle from "./SummoningCircle.tsx";
+import Modal from "./Modal.tsx";
+import { Character, SummonResult } from "../types.ts";
+import { summonSpirit, summonMultipleSpirits } from "../utils/summonLogic.ts";
 
 interface SummoningAreaProps {
   addCharacters: (characters: Character[]) => void;
@@ -14,12 +14,12 @@ interface SummoningAreaProps {
 }
 
 function SummoningArea({
-  addCharacters: (characters: Character[]) => void,
+  addCharacters,
   updateCurrency,
   coins,
   essence,
   playerInventory,
-}) {
+}: SummoningAreaProps) {
   const [showSummoning, setShowSummoning] = useState(false);
   const [summonCount, setSummonCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -27,7 +27,12 @@ function SummoningArea({
   const [summonResults, setSummonResults] = useState<SummonResult[]>([]);
 
   const handleSummon = (count: number, useEssence: boolean) => {
-    const cost = count === 1 ? (useEssence ? 1 : 100) : 50;
+    let cost = 0;
+    if (count === 1) {
+      cost = useEssence ? 1 : 100;
+    } else {
+      cost = 50;
+    }
     const currency = useEssence ? "essence" : "coins";
 
     if (
@@ -63,18 +68,21 @@ function SummoningArea({
       <h2>Summon Spirits</h2>
       <div className="summon-buttons">
         <button
+          type="button"
           className="btn summon-btn"
           onClick={() => handleSummon(1, false)}
         >
           Summon x1 <Coins size={16} /> 100
         </button>
         <button
+          type="button"
           className="btn summon-btn"
           onClick={() => handleSummon(1, true)}
         >
           Summon x1 <Droplet size={16} /> 1
         </button>
         <button
+          type="button"
           className="btn summon-btn bulk"
           onClick={() => handleSummon(10, true)}
         >
@@ -96,6 +104,6 @@ function SummoningArea({
       />
     </div>
   );
-};
+}
 
 export default SummoningArea;

@@ -31,6 +31,7 @@ export interface Character {
   specialAbility?: Ability;
   doppleAbility?: Ability;
   maxRarity: number;
+  image: string;
 }
 
 export interface Ability {

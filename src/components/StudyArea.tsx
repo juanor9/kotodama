@@ -1,6 +1,4 @@
-import React from 'react';
-
-const StudyArea: React.FC = () => {
+function StudyArea() {
   return (
     <div className="study-area">
       <h2>Study Arena</h2>
@@ -10,7 +8,9 @@ const StudyArea: React.FC = () => {
           {/* Add player's learned characters here */}
         </div>
         <div className="study-actions">
-          <button className="btn">Start Lesson</button>
+          <button type="button" className="btn">
+            Start Lesson
+          </button>
         </div>
         <div className="new-characters">
           <h3>New Characters</h3>
@@ -19,6 +19,6 @@ const StudyArea: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default StudyArea;

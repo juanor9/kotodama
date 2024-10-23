@@ -1,25 +1,34 @@
-import React, { useState } from 'react';
-import { Character, DiscAction, BattleState } from '../types';
-import BattleCharacter from './BattleCharacter';
-import DiscSelector from './DiscSelector';
+import { useState } from "react";
+import { Character, DiscAction, BattleState } from "../types.ts";
+import BattleCharacter from "./BattleCharacter.tsx";
+import DiscSelector from "./DiscSelector.tsx";
+
+function generateEnemyTeam(): Character[] {
+  // Implement enemy team generation logic here
+  return [];
+}
 
 interface BattleAreaProps {
   playerCharacters: Character[];
-  onBattleComplete: (rewards: { coins: number; essence: number; experience: number[] }) => void;
+  onBattleComplete?: (rewards: {
+    coins: number;
+    essence: number;
+    experience: number[];
+  }) => void;
 }
 
-const BattleArea: React.FC<BattleAreaProps> = ({ playerCharacters, onBattleComplete }) => {
+function BattleArea({ playerCharacters, onBattleComplete }: BattleAreaProps) {
   const [battleState, setBattleState] = useState<BattleState>({
     playerTeam: playerCharacters.slice(0, 3),
     enemyTeam: generateEnemyTeam(),
-    currentTurn: 'player',
+    currentTurn: "player",
     selectedDiscs: [],
     magicPoints: 100,
   });
 
   const handleDiscSelection = (disc: DiscAction) => {
     if (battleState.selectedDiscs.length < 3) {
-      setBattleState(prev => ({
+      setBattleState((prev) => ({
         ...prev,
         selectedDiscs: [...prev.selectedDiscs, disc],
       }));
@@ -30,6 +39,10 @@ const BattleArea: React.FC<BattleAreaProps> = ({ playerCharacters, onBattleCompl
     // Implement attack logic here
     // Update battleState based on the attack results
     // Check for battle completion and call onBattleComplete if necessary
+    if (onBattleComplete) {
+      // Example usage, replace with actual battle result logic
+      onBattleComplete({ coins: 100, essence: 50, experience: [10, 20, 30] });
+    }
   };
 
   return (
@@ -37,13 +50,21 @@ const BattleArea: React.FC<BattleAreaProps> = ({ playerCharacters, onBattleCompl
       <h2>Battle Arena</h2>
       <div className="battle-field">
         <div className="player-team">
-          {battleState.playerTeam.map(character => (
-            <BattleCharacter key={character.id} character={character} isPlayer={true} />
+          {battleState.playerTeam.map((character) => (
+            <BattleCharacter
+              key={character.id}
+              character={character}
+              isPlayer
+            />
           ))}
         </div>
         <div className="enemy-team">
-          {battleState.enemyTeam.map(character => (
-            <BattleCharacter key={character.id} character={character} isPlayer={false} />
+          {battleState.enemyTeam.map((character) => (
+            <BattleCharacter
+              key={character.id}
+              character={character}
+              isPlayer={false}
+            />
           ))}
         </div>
       </div>
@@ -52,16 +73,20 @@ const BattleArea: React.FC<BattleAreaProps> = ({ playerCharacters, onBattleCompl
         onDiscSelect={handleDiscSelection}
         selectedDiscs={battleState.selectedDiscs}
       />
-      <button className="btn attack-btn" onClick={handleAttack} disabled={battleState.selectedDiscs.length < 3}>
+      <button
+        type="button"
+        className="btn attack-btn"
+        onClick={handleAttack}
+        disabled={battleState.selectedDiscs.length < 3}
+      >
         Attack
       </button>
     </div>
   );
-};
-
-function generateEnemyTeam(): Character[] {
-  // Implement enemy team generation logic here
-  return [];
 }
+
+BattleArea.defaultProps = {
+  onBattleComplete: () => {},
+};
 
 export default BattleArea;

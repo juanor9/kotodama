@@ -38,8 +38,7 @@ function Login() {
     setError("");
     try {
       await resetPassword(email);
-      alert("Password reset email sent. Check your inbox.");
-      setError(""); // Limpia el error si la operación es exitosa
+      setError("Password reset email sent. Check your inbox."); // Reemplaza alert con un mensaje de estado
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

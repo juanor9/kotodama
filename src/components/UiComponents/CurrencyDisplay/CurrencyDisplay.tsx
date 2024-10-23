@@ -1,18 +1,17 @@
-import React from 'react';
-import './CurrencyDisplay.scss';
+import "./CurrencyDisplay.scss";
+
 interface CurrencyProps {
   coins: number;
   essence: number;
 }
 
-const CurrencyDisplay: React.FC<CurrencyProps> = ({ coins, essence }) => {
+function CurrencyDisplay({ coins, essence }: CurrencyProps) {
   return (
-      <section className="currency-display">
-        <span className="currency-display__coins"> {coins}</span>
-        <span className="currency-display__essence"> {essence}</span>
-      </section>
-      
+    <section className="currency-display">
+      <span className="currency-display__coins"> {coins}</span>
+      <span className="currency-display__essence"> {essence}</span>
+    </section>
   );
-};
+}
 
 export default CurrencyDisplay;
