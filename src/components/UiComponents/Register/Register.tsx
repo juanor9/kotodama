@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { registerUser } from "../services/userService.ts";
+import { registerUser } from "../../../services/userService.ts";
+import "./Register.scss";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -17,10 +18,11 @@ function Register() {
   };
 
   return (
-    <div className="register-form">
+    <div className="register__container">
       <h2>Register</h2>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} className="register__form">
         <input
+          className="register__form-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -29,6 +31,7 @@ function Register() {
           autoComplete="email"
         />
         <input
+          className="register__form-input"
           type="password"
           placeholder="Password"
           value={password}
@@ -37,6 +40,7 @@ function Register() {
           autoComplete="new-password"
         />
         <input
+          className="register__form-input"
           type="text"
           placeholder="Username"
           value={username}

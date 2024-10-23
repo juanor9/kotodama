@@ -13,6 +13,7 @@
 body {
   margin: 0;
   padding: 0;
+  font-size: 18px;
 }
 
 .app-container {
@@ -25,14 +26,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: url('../assets/bg/auth-bg.webp') center/cover no-repeat;
 }
 
 .login-form,
