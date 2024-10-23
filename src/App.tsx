@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./services/firebase.ts";
 import Header from "./components/Header.tsx";
@@ -19,19 +20,20 @@ import {
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [gameState, setGameState] = useState<GameState>({
-    coins: 1000,
-    essence: 50,
-    characters: [],
-    currentScreen: "main",
-  });
+  const [gameState, setGameState] = useState<GameState | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setUser(authUser);
       if (authUser) {
-        const userData = await getUserData(authUser.uid);
-        setGameState(userData);
+        try {
+          const userData = await getUserData(authUser.uid);
+          if (userData) {
+            setGameState(userData);
+          }
+        } catch (error) {
+          console.error("Failed to get user data", error);
+        }
       }
     });
 
@@ -39,20 +41,22 @@ function App() {
   }, []);
 
   const addCharacters = async (newCharacters: Character[]) => {
-    if (user) {
+    if (user && gameState) {
       const updatedCharacters = [...gameState.characters, ...newCharacters];
-      setGameState((prevState) => ({
-        ...prevState,
-        characters: updatedCharacters,
-      }));
-      await updateUserData(user.uid, { characters: updatedCharacters });
-
-      // Use Promise.all to handle multiple async operations in parallel
-      await Promise.all(
-        newCharacters.map((character) =>
-          addCharacterToInventory(user.uid, character),
-        ),
+      setGameState((prevState) =>
+        prevState ? { ...prevState, characters: updatedCharacters } : null,
       );
+      try {
+        await updateUserData(user.uid, { characters: updatedCharacters });
+        // Use Promise.all to handle multiple async operations in parallel
+        await Promise.all(
+          newCharacters.map((character) =>
+            addCharacterToInventory(user.uid, character),
+          ),
+        );
+      } catch (error) {
+        console.error("Failed to update user data or add characters", error);
+      }
     }
   };
 
@@ -60,19 +64,25 @@ function App() {
     coinsSpent: number,
     essenceSpent: number,
   ) => {
-    if (user) {
+    if (user && gameState) {
       const newCoins = gameState.coins - coinsSpent;
       const newEssence = gameState.essence - essenceSpent;
-      setGameState((prevState) => ({
-        ...prevState,
-        coins: newCoins,
-        essence: newEssence,
-      }));
-      await updateCurrency(user.uid, newCoins, newEssence);
+      setGameState((prevState) =>
+        prevState
+          ? { ...prevState, coins: newCoins, essence: newEssence }
+          : null,
+      );
+      try {
+        await updateCurrency(user.uid, newCoins, newEssence);
+      } catch (error) {
+        console.error("Failed to update currency", error);
+      }
     }
   };
 
   const renderCurrentScreen = () => {
+    if (!gameState) return null;
+
     switch (gameState.currentScreen) {
       case "summon":
         return (
@@ -103,6 +113,15 @@ function App() {
               essence: number;
               experience: number[];
             }) => {
+              setGameState((prevState) =>
+                prevState
+                  ? {
+                      ...prevState,
+                      coins: prevState.coins + rewards.coins,
+                      essence: prevState.essence + rewards.essence,
+                    }
+                  : null,
+              );
               console.log("Battle complete, rewards:", rewards);
             }}
           />
@@ -119,32 +138,36 @@ function App() {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="auth-container">
-        <Login />
-        <Register />
-      </div>
-    );
-  }
-
   return (
-    <div className="app-container">
-      <Header
-        coins={gameState.coins}
-        essence={gameState.essence}
-        onNavigate={(screen) =>
-          setGameState((prev) => ({ ...prev, currentScreen: screen }))
-        }
-        user={user}
-      />
-      <main>{renderCurrentScreen()}</main>
-      <Footer
-        onNavigate={(screen) =>
-          setGameState((prev) => ({ ...prev, currentScreen: screen }))
-        }
-      />
-    </div>
+    <BrowserRouter>
+      {!user ? (
+        <div className="auth-container">
+          <Login />
+          <Register />
+        </div>
+      ) : (
+        <div className="app-container">
+          <Header
+            coins={gameState?.coins || 0}
+            essence={gameState?.essence || 0}
+            onNavigate={(screen) =>
+              setGameState((prev) =>
+                prev ? { ...prev, currentScreen: screen } : null,
+              )
+            }
+            user={user}
+          />
+          <main>{renderCurrentScreen()}</main>
+          <Footer
+            onNavigate={(screen) =>
+              setGameState((prev) =>
+                prev ? { ...prev, currentScreen: screen } : null,
+              )
+            }
+          />
+        </div>
+      )}
+    </BrowserRouter>
   );
 }
 
