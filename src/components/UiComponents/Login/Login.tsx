@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../../services/userService";
+import { displayNotification } from "../../../services/firebase";
 import "./Login.scss";
 
 function Login() {
@@ -15,36 +17,16 @@ function Login() {
     setError("");
 
     try {
-      // For demo purposes, bypass Firebase auth
-      // await loginUser(email, password);
+      await loginUser(email, password);
+      displayNotification("Successfully logged in!");
       navigate("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
+        displayNotification(`Login failed: ${err.message}`);
       } else {
         setError("Failed to log in");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleResetPassword = async () => {
-    if (!email) {
-      setError("Please enter your email address");
-      return;
-    }
-    setIsLoading(true);
-    setError("");
-    try {
-      // For demo purposes, bypass Firebase auth
-      // await resetPassword(email);
-      setError("Password reset email sent. Check your inbox.");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Failed to send password reset email");
+        displayNotification("Login failed");
       }
     } finally {
       setIsLoading(false);
@@ -77,9 +59,6 @@ function Login() {
           {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
-      <button type="button" onClick={handleResetPassword} disabled={isLoading}>
-        {isLoading ? "Sending..." : "Reset Password"}
-      </button>
       {error && <p className="error">{error}</p>}
     </div>
   );

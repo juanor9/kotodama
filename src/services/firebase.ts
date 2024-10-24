@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -9,21 +10,63 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+// Create a notification element if it doesn't exist
+const createNotificationElement = () => {
+  const existingElement = document.getElementById("notification");
+  if (!existingElement) {
+    const element = document.createElement("div");
+    element.id = "notification";
+    element.style.display = "none";
+    element.style.position = "fixed";
+    element.style.top = "20px";
+    element.style.right = "20px";
+    element.style.padding = "10px";
+    element.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    element.style.color = "white";
+    element.style.borderRadius = "5px";
+    element.style.zIndex = "1000";
+    document.body.appendChild(element);
+  }
+};
+
+// Initialize notification element
+createNotificationElement();
+
+function displayNotification(message: string) {
+  const notificationElement = document.getElementById("notification");
+  if (notificationElement) {
+    notificationElement.innerText = message;
+    notificationElement.style.display = "block";
+    setTimeout(() => {
+      notificationElement.style.display = "none";
+    }, 3000);
+  }
+}
+
+// Initialize Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+// Set up auth state observer
 auth.onAuthStateChanged(
   (user) => {
     if (user) {
-      console.info("User is signed in");
+      displayNotification(`Signed in as ${user.email}`);
     } else {
-      console.info("No user is signed in");
+      displayNotification("Signed out");
     }
   },
   (error) => {
-    console.error("Auth state change error:", error);
+    displayNotification(`Auth error: ${error.message}`);
   },
 );
+
+// Export Firebase instances and utilities
+export { app, analytics, displayNotification };

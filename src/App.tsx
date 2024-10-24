@@ -12,7 +12,7 @@ import { Character, GameState } from "./types.ts";
 import BattleArea from "./components/BattleArea.tsx";
 import CharacterList from "./components/CharacterList.tsx";
 import Header from "./components/Header.tsx";
-import SummoningArea from "./components/SummoningArea.tsx";
+import SummonSection from "./components/SummonSection/SummonSection.tsx";
 import UserProfile from "./components/UserProfile.tsx";
 import Auth from "./components/Screens/Auth.tsx";
 import MainMenu from "./components/UiComponents/MainMenu/MainMenu.tsx";
@@ -49,7 +49,6 @@ function App() {
       );
       try {
         await updateUserData(user.uid, { characters: updatedCharacters });
-        // Use Promise.all to handle multiple async operations in parallel
         await Promise.all(
           newCharacters.map((character) =>
             addCharacterToInventory(user.uid, character),
@@ -87,7 +86,7 @@ function App() {
     switch (gameState.currentScreen) {
       case "summon":
         return (
-          <SummoningArea
+          <SummonSection
             addCharacters={addCharacters}
             updateCurrency={updateCurrencyState}
             coins={gameState.coins}
@@ -123,7 +122,6 @@ function App() {
                     }
                   : null,
               );
-              console.log("Battle complete, rewards:", rewards);
             }}
           />
         );
