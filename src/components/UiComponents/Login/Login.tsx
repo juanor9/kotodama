@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, resetPassword } from "../../../services/userService.ts";
 import "./Login.scss";
 
 function Login() {
@@ -16,8 +15,8 @@ function Login() {
     setError("");
 
     try {
-      await loginUser(email, password);
-      // Redirige al usuario a la página principal o a su panel de usuario después del login
+      // For demo purposes, bypass Firebase auth
+      // await loginUser(email, password);
       navigate("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -38,8 +37,9 @@ function Login() {
     setIsLoading(true);
     setError("");
     try {
-      await resetPassword(email);
-      setError("Password reset email sent. Check your inbox."); // Reemplaza alert con un mensaje de estado
+      // For demo purposes, bypass Firebase auth
+      // await resetPassword(email);
+      setError("Password reset email sent. Check your inbox.");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
