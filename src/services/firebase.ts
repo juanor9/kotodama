@@ -14,3 +14,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+auth.onAuthStateChanged(
+  (user) => {
+    if (user) {
+      console.info("User is signed in");
+    } else {
+      console.info("No user is signed in");
+    }
+  },
+  (error) => {
+    console.error("Auth state change error:", error);
+  },
+);
