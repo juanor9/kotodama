@@ -15,6 +15,17 @@ export type SpiritType = "Component" | "Kanji" | "Word";
 export type Rarity = 1 | 2 | 3 | 4 | 5 | 6;
 export type AttackType = "Form" | "Meaning" | "Reading";
 
+export interface Material {
+  material_id: string;
+  name: string;
+  japanese_name: string;
+  description: string;
+  rarity: number;
+  element_types: ElementType[];
+  obtainable_from: string[];
+  image_url: string;
+}
+
 export interface Character {
   id: number;
   name: string;
@@ -37,13 +48,14 @@ export interface Character {
 export interface Ability {
   name: string;
   description: string;
-  effect: (target: Character) => void; // Cambio para definir Character después
+  effect: (target: Character) => void;
 }
 
 export interface GameState {
   coins: number;
   essence: number;
   characters: Character[];
+  materials?: Material[];
   currentScreen: "main" | "summon" | "characters" | "battle" | "profile";
 }
 

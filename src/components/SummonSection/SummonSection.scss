@@ -1,0 +1,96 @@
+@use "../../styles/variables";
+@use "../../styles/mixins";
+@use "../../styles/animations";
+
+.summon-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 100vh;
+
+  &__navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  &__tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 2rem;
+    background: linear-gradient(
+      135deg,
+      rgba(variables.$menu-dark-color, 0.8),
+      rgba(variables.$menu-light-color, 0.8)
+    );
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    &.active {
+      background: variables.$button-gradient;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  &__panel {
+    flex: 1;
+    max-width: 1200px;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  &__arrow {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 1rem;
+    border-radius: 50%;
+    background: rgba(variables.$menu-dark-color, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: variables.$menu-dark-color;
+      transform: scale(1.1);
+    }
+
+    &.left {
+      left: 1rem;
+    }
+
+    &.right {
+      right: 1rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

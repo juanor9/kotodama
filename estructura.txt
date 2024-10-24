@@ -1,0 +1,102 @@
+Listado de rutas de carpetas
+El n£mero de serie del volumen es C0000100 2463:1EE3
+D:.
+|   .env
+|   .eslintignore
+|   .eslintrc.json
+|   .gitignore
+|   estructura.txt
+|   index.html
+|   package-lock.json
+|   package.json
+|   postcss.config.js
+|   README.md
+|   tsconfig.app.json
+|   tsconfig.json
+|   tsconfig.node.json
+|   vite.config.ts
+|   
++---.bolt
+|       config.json
+|       prompt
+|       
+\---src
+    |   App.tsx
+    |   main.tsx
+    |   types.ts
+    |   vite-env.d.ts
+    |   
+    +---assets
+    |   +---bg
+    |   |       auth_bg.webp
+    |   |       bg.webp
+    |   |       DALLúE 2024-10-23 18.09.28 - A main menu interface design for a modern gacha game set in Japan, called 'Kotodama Chronicles'. The design should avoid any elements or characters fr.webp
+    |   |       
+    |   +---icons
+    |   |       coin.png
+    |   |       coin_lowres.png
+    |   |       essence.png
+    |   |       essence_lowres.png
+    |   |       
+    |   \---spiritsArt
+    |           8f0143d9-ae56-4c09-bf21-98f7f8f7e874_r1.jpg
+    |           8f0143d9-ae56-4c09-bf21-98f7f8f7e874_r2.jpg
+    |           8f0143d9-ae56-4c09-bf21-98f7f8f7e874_r3.jpg
+    |           9bce2b1e-3e6e-4c1b-92f4-d7d9fa774b35_r1.jpg
+    |           9bce2b1e-3e6e-4c1b-92f4-d7d9fa774b35_r2.jpg
+    |           9bce2b1e-3e6e-4c1b-92f4-d7d9fa774b35_r3.jpg
+    |           f47ac10b-58cc-4372-a567-0e02b2c3d479_r1.jpg
+    |           f47ac10b-58cc-4372-a567-0e02b2c3d479_r2.jpg
+    |           f47ac10b-58cc-4372-a567-0e02b2c3d479_r3.jpg
+    |           
+    +---components
+    |   |   BattleArea.tsx
+    |   |   BattleCharacter.tsx
+    |   |   CharacterCard.tsx
+    |   |   CharacterList.tsx
+    |   |   DiscSelector.tsx
+    |   |   Header.tsx
+    |   |   Modal.tsx
+    |   |   StudyArea.tsx
+    |   |   SummoningArea.tsx
+    |   |   SummoningCircle.tsx
+    |   |   UserProfile.tsx
+    |   |   
+    |   +---Screens
+    |   |       Auth.scss
+    |   |       Auth.tsx
+    |   |       
+    |   \---UiComponents
+    |       +---CurrencyDisplay
+    |       |       CurrencyDisplay.scss
+    |       |       CurrencyDisplay.tsx
+    |       |       
+    |       +---Login
+    |       |       Login.scss
+    |       |       Login.tsx
+    |       |       
+    |       +---MainMenu
+    |       |       MainMenu.scss
+    |       |       MainMenu.tsx
+    |       |       
+    |       \---Register
+    |               Register.scss
+    |               Register.tsx
+    |               
+    +---data
+    |       materials.json
+    |       spirits.json
+    |       
+    +---services
+    |       firebase.ts
+    |       userService.ts
+    |       
+    +---styles
+    |       main.scss
+    |       _animations.scss
+    |       _mixins.scss
+    |       _variables.scss
+    |       
+    \---utils
+            summonLogic.ts
+            

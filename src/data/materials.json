@@ -1,0 +1,152 @@
+[
+  {
+      "material_id": "7db80d2f-6de9-46ac-aebd-ceaa33f66ac7",
+      "name": "Shimenawa Rope",
+      "japanese_name": "注連縄",
+      "description": "Sacred rope used to mark objects or places as pure. Used for enhancing spirit rarity.",
+      "rarity": 2,
+      "element_types": ["earth", "wood", "light"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/7db80d2f-6de9-46ac-aebd-ceaa33f66ac7.png"
+  },
+  {
+      "material_id": "7f56b739-10d4-4f49-acfe-33a9b2dbe366",
+      "name": "Gohei Amulet",
+      "japanese_name": "御幣",
+      "description": "Amulet made of white paper traditionally used in purification rituals. It connects the sacred with the earthly, providing protection and purification.",
+      "rarity": 2,
+      "element_types": ["light", "air"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/7f56b739-10d4-4f49-acfe-33a9b2dbe366.png"
+  },
+  {
+      "material_id": "4bc20678-bd3c-4c2a-a71a-3ad106524114",
+      "name": "Kagura Bell",
+      "japanese_name": "神楽鈴",
+      "description": "Sacred bell used in the Kagura ritual dances, a ceremonial art dedicated to the gods. These bells are used to enhance the spiritual connection of spirits and purify the area.",
+      "rarity": 3,
+      "element_types": ["air", "light"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/4bc20678-bd3c-4c2a-a71a-3ad106524114.png"
+  },
+  {
+      "material_id": "4341f83b-7da8-48a6-a5ef-da9eb04b6896",
+      "name": "Ofuda Talisman",
+      "japanese_name": "御札",
+      "description": "Paper talisman with sacred writings, used to protect or purify an area. It is employed in summoning rituals to repel negative influences and strengthen the spiritual bond.",
+      "rarity": 3,
+      "element_types": ["earth", "light", "darkness"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/4341f83b-7da8-48a6-a5ef-da9eb04b6896.png"
+  },
+  {
+      "material_id": "ddb95ad4-e3ff-43ad-ae19-036b8fc8bad8",
+      "name": "Tamagushi Branch",
+      "japanese_name": "玉串",
+      "description": "Sakaki branch adorned with washi paper strips, used in offering rituals to the gods. It is a symbol of respect and devotion in Japanese culture.",
+      "rarity": 4,
+      "element_types": ["wood", "healing"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/ddb95ad4-e3ff-43ad-ae19-036b8fc8bad8.png"
+  },
+  {
+      "material_id": "82f9cfec-5fbe-447d-96b3-fa009a74d1aa",
+      "name": "Omamori Amulet",
+      "japanese_name": "お守り",
+      "description": "A protective amulet commonly used in daily life to bring luck or protection. In the game context, it is associated with the elements Healing and Light.",
+      "rarity": 4,
+      "element_types": ["healing", "light"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/82f9cfec-5fbe-447d-96b3-fa009a74d1aa.png"
+  },
+  {
+      "material_id": "619e3fb5-0048-43a4-a2ca-117c59e8f7a7",
+      "name": "Hitogata Doll",
+      "japanese_name": "人形",
+      "description": "A paper or straw figure used in rituals to transfer impurities and perform purification. It is employed to remove curses or negative states from spirits.",
+      "rarity": 2,
+      "element_types": ["water", "healing"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/619e3fb5-0048-43a4-a2ca-117c59e8f7a7.png"
+  },
+  {
+      "material_id": "9dcfa40b-09b6-429b-b085-91bf3efe1453",
+      "name": "Suzu Bell",
+      "japanese_name": "鈴",
+      "description": "Small bells used to invoke good fortune and repel evil. In rituals, they help harmonize energy. Associated with the elements Air and Metal, they amplify the offensive power of spirits.",
+      "rarity": 3,
+      "element_types": ["air", "metal"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/9dcfa40b-09b6-429b-b085-91bf3efe1453.png"
+  },
+  {
+      "material_id": "05359204-aa96-468e-908b-c8be46c3f548",
+      "name": "Sakaki Branch",
+      "japanese_name": "榊",
+      "description": "Branch of the sakaki tree, considered sacred in Shinto tradition and used in ceremonies to honor the gods. Associated with the elements Wood and Earth.",
+      "rarity": 4,
+      "element_types": ["wood", "earth"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/05359204-aa96-468e-908b-c8be46c3f548.png"
+  },
+  {
+      "material_id": "96307eb9-fa79-4ed7-9313-3abc774d3798",
+      "name": "Inro Box",
+      "japanese_name": "印籠",
+      "description": "A small box traditionally used to store medicines or precious herbs. It represents care and protection.",
+      "rarity": 4,
+      "element_types": ["metal", "earth"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/96307eb9-fa79-4ed7-9313-3abc774d3798.png"
+  },
+  {
+      "material_id": "11fa609b-4a50-42f2-af84-639f3588aded",
+      "name": "Hokora Shrine",
+      "japanese_name": "祠",
+      "description": "A small portable shrine used to worship local deities or minor kami. It provides a direct link to the divine.",
+      "rarity": 5,
+      "element_types": ["light", "earth"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/11fa609b-4a50-42f2-af84-639f3588aded.png"
+  },
+  {
+      "material_id": "b618d2f6-57f1-4e06-9188-1d190260d9fa",
+      "name": "Kōdō Incense",
+      "japanese_name": "香道",
+      "description": "Incense used in ceremonies to attract good fortune and purify the environment, creating a favorable atmosphere for meditation and spiritual strengthening.",
+      "rarity": 3,
+      "element_types": ["fire", "air"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/b618d2f6-57f1-4e06-9188-1d190260d9fa.png"
+  },
+  {
+      "material_id": "4725b01a-90da-4707-84ff-261719199cd8",
+      "name": "Magatama Jewel",
+      "japanese_name": "勾玉",
+      "description": "A comma-shaped jewel symbolizing protection and spirituality, used as an amulet of power and connection to the divine.",
+      "rarity": 5,
+      "element_types": ["light", "darkness"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/4725b01a-90da-4707-84ff-261719199cd8.png"
+  },
+  {
+      "material_id": "7dde743f-1dfa-4442-ad34-12ae32fe2785",
+      "name": "Shakujō Staff",
+      "japanese_name": "錫杖",
+      "description": "A ceremonial staff used by Buddhist monks, symbolizing spiritual authority and the power to ward off evil spirits.",
+      "rarity": 5,
+      "element_types": ["metal", "light"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/7dde743f-1dfa-4442-ad34-12ae32fe2785.png"
+  },
+  {
+      "material_id": "e2cae2c6-d298-4f00-a925-55f6e34c646c",
+      "name": "Mizuhiki Knot",
+      "japanese_name": "水引",
+      "description": "A decorative cord used in gifts and ceremonies to symbolize connection and the wish for prosperity.",
+      "rarity": 2,
+      "element_types": ["healing", "water"],
+      "obtainable_from": ["battle_reward", "material_purchase", "story_reward"],
+      "image_url": "https://example.com/images/e2cae2c6-d298-4f00-a925-55f6e34c646c.png"
+  }
+]
