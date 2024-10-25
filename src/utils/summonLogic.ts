@@ -1,4 +1,4 @@
-import spiritsData from "../data/spirits.json";
+import spiritsData from "../data/spirits.json" assert { type: "json" };
 import {
   Character,
   Ability,
@@ -8,15 +8,25 @@ import {
   Rarity,
 } from "../types.ts";
 
-interface RequiredItem {
-  rarity_level: number;
-  materials: { material_id: string; quantity: number }[];
+interface Spirit {
+  spirit_id: string;
+  name: string;
+  type: string;
+  rarity: number;
+  element: string;
+  summon_probability: number;
+  usage: string;
+  abilities: { type: string; description: string }[];
+  attacks?: { [key: string]: Ability };
 }
 
 function weightedRandomSelection<T>(
   items: T[],
   weightFn: (item: T) => number,
 ): T {
+  if (items.some((item) => weightFn(item) < 0)) {
+    throw new Error("Weights must be non-negative");
+  }
   const totalWeight = items.reduce((sum, item) => sum + weightFn(item), 0);
   if (totalWeight === 0) {
     throw new Error("Total weight must be greater than 0");
@@ -28,20 +38,26 @@ function weightedRandomSelection<T>(
     accumulatedWeight += weightFn(item);
     return accumulatedWeight >= random;
   });
-  return selectedItem || items[items.length - 1];
+
+  if (!selectedItem) {
+    throw new Error("No item could be selected based on the given weights");
+  }
+
+  return selectedItem;
 }
 
-function createCharacterFromSpirit(spirit: {
-  spirit_id: string;
-  name: string;
+function createAbility(ability: {
   type: string;
-  rarity: number;
-  element: string;
-  summon_probability: number;
-  usage: string;
-  abilities: { type: string; description: string }[];
-  attacks?: { [key: string]: Ability };
-}): Character {
+  description: string;
+}): Ability {
+  return {
+    ...ability,
+    name: ability.type,
+    effect: () => {},
+  };
+}
+
+function createCharacterFromSpirit(spirit: Spirit): Character {
   return {
     id: parseInt(spirit.spirit_id, 10),
     name: spirit.name,
@@ -51,20 +67,15 @@ function createCharacterFromSpirit(spirit: {
     shape: spirit.name,
     meaning:
       spirit.abilities
-        .map((a) => ({ ...a, name: a.type, effect: () => {} }))
+        .map(createAbility)
         .find((a: Ability) => a.name === "Meaning")?.description || "",
     reading:
       spirit.abilities
-        .map((a) => ({ ...a, name: a.type, effect: () => {} }))
+        .map(createAbility)
         .find((a: Ability) => a.name === "Reading")?.description || "",
     level: 1,
     experience: 0,
-    abilities: spirit.abilities.map((a) => ({
-      type: a.type,
-      description: a.description,
-      name: a.type,
-      effect: () => {},
-    })),
+    abilities: spirit.abilities.map(createAbility),
     attacks: spirit.attacks
       ? {
           Form: spirit.attacks.Form,
@@ -72,23 +83,21 @@ function createCharacterFromSpirit(spirit: {
           Reading: spirit.attacks.Reading,
         }
       : undefined,
-    maxRarity: Math.max(spirit.rarity, 6), // Definir la rareza máxima permitida, considerando un crecimiento futuro
+    maxRarity: Math.max(spirit.rarity, 6),
     image: "",
   };
 }
 
+function getGuaranteedRareIndex(count: number): number {
+  return count === 10 ? Math.floor(Math.random() * 10) : -1;
+}
+
 export function summonSpirit(playerInventory: Character[]): SummonResult {
-  const availableSpirits = spiritsData.filter(
-    (s: {
-      usage: string;
-      rarity: number;
-      summon_probability: number;
-      spirit_id: string;
-      required_items_for_rarity_increase?: RequiredItem[];
-    }) =>
+  const availableSpirits: Spirit[] = spiritsData.filter(
+    (s: Spirit) =>
       s.usage === "BattleAndFusion" ||
       s.usage === "SummonEligible" ||
-      s.usage === "TrainingRanger", // Incluir Training Rangers
+      s.usage === "TrainingRanger",
   );
   if (availableSpirits.length === 0) {
     throw new Error("No available spirits for summoning");
@@ -108,25 +117,21 @@ export function summonMultipleSpirits(
   playerInventory: Character[],
 ): SummonResult[] {
   const results: SummonResult[] = [];
-  const guaranteedRareIndex =
-    count === 10 ? Math.floor(Math.random() * 10) : -1;
+  const guaranteedRareIndex = getGuaranteedRareIndex(count);
+
+  let cachedSummonResult: SummonResult | null = null;
 
   Array.from({ length: count }).forEach((_, i) => {
     if (i === guaranteedRareIndex) {
-      const rareSpirits = spiritsData.filter(
-        (s: {
-          usage: string;
-          rarity: number;
-          summon_probability: number;
-          spirit_id: string;
-          required_items_for_rarity_increase?: RequiredItem[];
-        }) =>
+      const rareSpirits: Spirit[] = spiritsData.filter(
+        (s: Spirit) =>
           (s.usage === "BattleAndFusion" || s.usage === "SummonEligible") &&
-          s.rarity >= 4, // No incluir Training Rangers en la invocación garantizada de rareza
+          s.rarity >= 4,
       );
       if (rareSpirits.length === 0) {
-        // console.warn statement removed to comply with eslint no-console rule
-        results.push(summonSpirit(playerInventory)); // Incluir Training Rangers en invocaciones normales
+        cachedSummonResult =
+          cachedSummonResult || summonSpirit(playerInventory);
+        results.push(cachedSummonResult);
         return;
       }
       const selectedSpirit = weightedRandomSelection(
@@ -137,7 +142,10 @@ export function summonMultipleSpirits(
       const isNew = !playerInventory.some((c) => c.id === character.id);
       results.push({ character, isNew });
     } else {
-      results.push(summonSpirit(playerInventory)); // Incluir Training Rangers en invocaciones normales
+      if (!cachedSummonResult) {
+        cachedSummonResult = summonSpirit(playerInventory);
+      }
+      results.push(cachedSummonResult);
     }
   });
 

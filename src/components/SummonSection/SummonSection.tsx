@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import SummoningArea from "../SummoningArea";
-import MaterialStore from "../MaterialStore/MaterialStore";
-import { Character } from "../../types";
+import SummoningArea from "../SummoningArea.tsx";
+import MaterialStore from "../MaterialStore/MaterialStore.tsx";
+import { Character } from "../../types.ts";
 import "./SummonSection.scss";
 
 interface SummonSectionProps {
@@ -13,6 +13,23 @@ interface SummonSectionProps {
   playerInventory: Character[];
 }
 
+const tabs = [
+  { id: "spirits", label: "Spirit Summoning" },
+  { id: "materials", label: "Material Purchase" },
+];
+
+const coinCosts: Record<number, number> = {
+  1: 100,
+  10: 900,
+  50: 4000,
+};
+
+const essenceCosts: Record<number, number> = {
+  1: 1,
+  10: 10,
+  50: 50,
+};
+
 function SummonSection({
   addCharacters,
   updateCurrency,
@@ -20,14 +37,14 @@ function SummonSection({
   essence,
   playerInventory,
 }: SummonSectionProps) {
-  const [currentTab, setCurrentTab] = useState<"spirits" | "materials">("spirits");
+  const [currentTab, setCurrentTab] = useState<"spirits" | "materials">(
+    "spirits",
+  );
 
-  const tabs = [
-    { id: "spirits", label: "Spirit Summoning" },
-    { id: "materials", label: "Material Purchase" },
-  ];
-
-  const currentIndex = tabs.findIndex((tab) => tab.id === currentTab);
+  const currentIndex = useMemo(
+    () => tabs.findIndex((tab) => tab.id === currentTab),
+    [currentTab],
+  );
 
   const navigate = (direction: "prev" | "next") => {
     const newIndex =
@@ -48,6 +65,7 @@ function SummonSection({
               currentTab === tab.id ? "active" : ""
             }`}
             onClick={() => setCurrentTab(tab.id as "spirits" | "materials")}
+            data-testid={`tab-${tab.id}`}
           >
             {tab.label}
           </button>
@@ -59,6 +77,7 @@ function SummonSection({
           type="button"
           className="summon-section__arrow left"
           onClick={() => navigate("prev")}
+          aria-label="Navigate to previous tab"
         >
           <ChevronLeft size={24} />
         </button>
@@ -77,10 +96,13 @@ function SummonSection({
               coins={coins}
               essence={essence}
               onPurchase={async (amount, useEssence) => {
-                await updateCurrency(
-                  useEssence ? 0 : amount === 1 ? 100 : amount === 10 ? 900 : 4000,
-                  useEssence ? amount === 1 ? 1 : amount === 10 ? 10 : 50 : 0
-                );
+                const coinsSpent = useEssence
+                  ? 0
+                  : coinCosts[amount as keyof typeof coinCosts] || 0;
+                const essenceSpent = useEssence
+                  ? essenceCosts[amount as keyof typeof essenceCosts] || 0
+                  : 0;
+                await updateCurrency(coinsSpent, essenceSpent);
               }}
             />
           )}
@@ -90,6 +112,7 @@ function SummonSection({
           type="button"
           className="summon-section__arrow right"
           onClick={() => navigate("next")}
+          aria-label="Navigate to next tab"
         >
           <ChevronRight size={24} />
         </button>
