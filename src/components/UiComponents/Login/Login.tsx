@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../../services/userService";
-import { displayNotification } from "../../../services/firebase";
+import { loginUser } from "../../../services/userService.ts";
+import { displayNotification } from "../../../services/firebase.ts";
 import "./Login.scss";
 
 function Login() {

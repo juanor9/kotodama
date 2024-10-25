@@ -1,15 +1,15 @@
+/* eslint-disable no-console */
 import {
   collection,
   doc,
   getDoc,
   getDocs,
+  runTransaction,
   query,
   where,
-  runTransaction,
-  setDoc,
 } from "firebase/firestore";
-import { auth, db } from "./firebase";
-import { Material } from "../types";
+import { auth, db } from "./firebase.ts";
+import { Material } from "../types.ts";
 
 const MATERIAL_PROBABILITIES = {
   1: 0.4, // Common: 40%
@@ -19,30 +19,48 @@ const MATERIAL_PROBABILITIES = {
   5: 0.02, // Legendary: 2%
 };
 
-function getRandomMaterial(materials: Material[], guaranteedMinRarity = 1): Material {
-  const filteredMaterials = materials.filter(
-    (material) => material.rarity >= guaranteedMinRarity
-  );
-  
+const cachedFilteredMaterials: { [key: number]: Material[] } = {};
+
+function getRandomMaterial(
+  materials: Material[],
+  guaranteedMinRarity = 1,
+): Material {
+  if (!cachedFilteredMaterials[guaranteedMinRarity]) {
+    cachedFilteredMaterials[guaranteedMinRarity] = materials.filter(
+      (material) => material.rarity >= guaranteedMinRarity,
+    );
+  }
+  const filteredMaterials = cachedFilteredMaterials[guaranteedMinRarity];
+
   const random = Math.random();
   let probabilitySum = 0;
-  
-  for (let rarity = guaranteedMinRarity; rarity <= 5; rarity++) {
-    probabilitySum += MATERIAL_PROBABILITIES[rarity as keyof typeof MATERIAL_PROBABILITIES];
-    const materialsOfRarity = filteredMaterials.filter((m) => m.rarity === rarity);
-    
+
+  for (let rarity = guaranteedMinRarity; rarity <= 5; rarity += 1) {
+    probabilitySum +=
+      MATERIAL_PROBABILITIES[rarity as keyof typeof MATERIAL_PROBABILITIES];
+    const materialsOfRarity = filteredMaterials.filter(
+      (m) => m.rarity === rarity,
+    );
+
     if (random <= probabilitySum && materialsOfRarity.length > 0) {
-      return materialsOfRarity[Math.floor(Math.random() * materialsOfRarity.length)];
+      return materialsOfRarity[
+        Math.floor(Math.random() * materialsOfRarity.length)
+      ];
     }
   }
-  
-  return filteredMaterials[Math.floor(Math.random() * filteredMaterials.length)];
+
+  return filteredMaterials[
+    Math.floor(Math.random() * filteredMaterials.length)
+  ];
+}
+
+function getGuaranteedMinRarity(): number {
+  return Math.random() < 0.2 ? 3 : 1;
 }
 
 export async function purchaseMaterials(
-  userId: string,
   amount: number,
-  useEssence: boolean
+  useEssence: boolean,
 ): Promise<Material[]> {
   if (!auth.currentUser) {
     throw new Error("User not authenticated");
@@ -50,30 +68,39 @@ export async function purchaseMaterials(
 
   try {
     const materialsRef = collection(db, "materials");
-    const materialsSnapshot = await getDocs(materialsRef);
-    const materials = materialsSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      material_id: doc.id,
+    const q = query(materialsRef, where("available", "==", true));
+    const materialsSnapshot = await getDocs(q);
+    const materials = materialsSnapshot.docs.map((materialDoc) => ({
+      ...materialDoc.data(),
+      material_id: materialDoc.id,
     })) as Material[];
 
     const userRef = doc(db, "users", auth.currentUser.uid);
     const userDoc = await getDoc(userRef);
 
     if (!userDoc.exists()) {
-      // Create user document if it doesn't exist
-      await setDoc(userRef, {
-        coins: 1000,
-        essence: 50,
-        materials: [],
-      });
+      throw new Error(
+        "User document does not exist. Please register the user first.",
+      );
     }
 
     const result = await runTransaction(db, async (transaction) => {
       const userSnapshot = await transaction.get(userRef);
-      const userData = userSnapshot.data() || { coins: 1000, essence: 50, materials: [] };
+      const userData = userSnapshot.data() || {
+        coins: 1000,
+        essence: 50,
+        materials: [],
+      };
 
-      const cost = amount === 1 ? 100 : amount === 10 ? 900 : 4000;
-      const essenceCost = amount === 1 ? 1 : amount === 10 ? 10 : 50;
+      const costMap: { [key: number]: number } = { 1: 100, 10: 900, 50: 4000 };
+      const essenceCostMap: { [key: number]: number } = {
+        1: 1,
+        10: 10,
+        50: 50,
+      };
+
+      const cost = costMap[amount] || 0;
+      const essenceCost = essenceCostMap[amount] || 0;
 
       if (useEssence && userData.essence < essenceCost) {
         throw new Error("Not enough essence");
@@ -81,6 +108,10 @@ export async function purchaseMaterials(
 
       if (!useEssence && userData.coins < cost) {
         throw new Error("Not enough coins");
+      }
+
+      if (cost < 0 || essenceCost < 0) {
+        throw new Error("Invalid cost or essence cost");
       }
 
       const purchasedMaterials: Material[] = [];
@@ -92,14 +123,16 @@ export async function purchaseMaterials(
         // One guaranteed rare material
         purchasedMaterials.push(getRandomMaterial(materials, 3));
         // Nine regular materials
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 9; i += 1) {
           purchasedMaterials.push(getRandomMaterial(materials));
         }
       } else {
         // Fifty materials with increased chances
-        for (let i = 0; i < 50; i++) {
-          const guaranteedMinRarity = Math.random() < 0.2 ? 3 : 1;
-          purchasedMaterials.push(getRandomMaterial(materials, guaranteedMinRarity));
+        for (let i = 0; i < 50; i += 1) {
+          const guaranteedMinRarity = getGuaranteedMinRarity();
+          purchasedMaterials.push(
+            getRandomMaterial(materials, guaranteedMinRarity),
+          );
         }
       }
 
@@ -120,7 +153,7 @@ export async function purchaseMaterials(
   }
 }
 
-export async function getUserMaterials(userId: string): Promise<Material[]> {
+export async function getUserMaterials(): Promise<Material[]> {
   if (!auth.currentUser) {
     throw new Error("User not authenticated");
   }
